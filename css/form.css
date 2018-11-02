@@ -1,0 +1,132 @@
+ul li{
+	list-style: none;
+}
+a{
+	padding-left: 10px;
+}
+a:hover{
+	 text-decoration: none;
+}
+.error{
+	border: 1px solid red;
+}
+@font-face {
+	font-family: "iconfont";
+  	src: url('../fonts/iconfont.eot?t=1460925139'); 
+  	src: url('../fonts/iconfont.eot?t=1460925139#iefix') format('embedded-opentype'),
+  	url('../fonts/iconfont.woff?t=1460925139') format('woff'),
+  	url('../fonts/iconfont.ttf?t=1460925139') format('truetype'), 
+  	url('../fonts/iconfont.svg?t=1460925139#iconfont') format('svg');
+}
+
+.form-item{
+	width: 1400px;
+	padding: 0;
+	table-layout: fixed;
+	border-collapse:collapse;
+}
+td{border:solid #e1e1e1; border-width:0px 0px 1px 0px;}
+.form-it{
+    padding: 0;
+    margin-left: -1px;
+    margin-top: 0px;
+    margin-right: 1px;
+    margin-bottom: -1px;
+    height: auto;
+    overflow: hidden;
+    vertical-align: top;
+}
+.radio-inline label,
+.checkbox-inline label{
+	font-size: 14px;
+	color: #666;
+	font-weight: normal;
+}
+.form-mg{
+	display: inline-block;
+	float: left;
+	line-height: 44px;
+	text-align: right;
+	font-size: 14px;
+	padding-right: 10px;
+	background: #e7f2f8;
+	width: 165px;
+	height: 100%;
+	height: auto;
+	margin-bottom: -100px;  
+	padding-bottom: 100px;
+}
+.form-ip>input,
+.form-ip>select{
+	width: 80%;
+}
+input, select{
+    border: 1px solid #ddd;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 6px 10px;
+    border-radius: 2px;
+    outline: none;
+    font-size: 12px;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+input[type="number"]{
+    -moz-appearance: textfield;
+}
+.form-ip{
+	display: inline-block;
+	float: left;
+	min-height: 44px;
+	height: inherit;
+	font-size: 14px;
+	padding: 6px;
+	width: 60%;
+	margin-top: 3px;
+}
+input[type="radio"], .checkbox input[type="checkbox"], .checkbox-inline input[type="checkbox"] {
+    position: absolute;	
+}
+.radio-inline, .checkbox-inline {
+    display: inline-block;
+    padding-left: 20px;
+    margin-bottom: 0;
+    font-weight: normal;
+    vertical-align: middle;
+    cursor: pointer;
+    padding-top: 7px;
+}
+.input-group-addon{
+	display: inline-block;
+	width: 40px;
+}
+.cp_img_jia{
+	display: inline-block;
+	width: 140px;
+    height: 140px;
+    float: left;
+    margin-right: 16px;
+    background-size: contain;
+}
+tr:first-child td{
+	border-top: none !important;
+}
+tr:last-child td{
+	border-bottom: none !important;
+} 
+tr td:first-child{
+	border-left: none !important;
+}
+tr td:last-child{
+	border-right: none !important;
+}
+.icon-date{
+	font-family: "iconfont" !important;
+    font-style: normal;
+    font-size: 17px;
+    color: #000;
+}
+#formTitle{
+	text-align: center;
+}

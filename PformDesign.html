@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>自定义表单</title>
+		<script src="js-PformDesign/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js-PformDesign/jquery.bigcolorpicker.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js-PformDesign/wordtopy.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js-PformDesign/draft.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js-PformDesign/form.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js-PformDesign/bind.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js-PformDesign/Serialization.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" href="css/bootstrap.min.css" />
+		<link rel="stylesheet" href="css/PformDesign.css" />
+		<link rel="stylesheet" type="text/css" href="css/jquery.bigcolorpicker.css"/>
+		<script>
+			window.onload = function() {
+				sessionStorage.removeItem('bordercolor');
+				$("#colorchoose").bigColorpicker(function(el,color){
+					$(el).css("background-color",color);
+					$('#dropArea').css('border-color', color);
+					$('#dropArea>div').css('border-color', color);
+					sessionStorage.setItem('bordercolor', color);
+				});
+				$('#borderwidth').bind('change', function(){
+					var borderwidth = $('#borderwidth').val() + 'px';
+					$('#dropArea').css('border-width', borderwidth);
+					$('#dropArea').css('border-style', 'solid');
+					$('#dropArea>div').css('border-width', borderwidth);
+					$('#dropArea>div').css('border-style', 'solid');
+				});
+				drag({
+					dragArea: "dragArea",
+					dropArea: "dropArea",
+					onDropEnd: function(node) {
+						if(node != undefined) {
+							var val = $('#formcols').val();
+							var width;
+							if(val == '3') {
+								width = '33.3%';
+								$(node).addClass('colspan3');
+							} else if(val == '2') {
+								width = '50%';
+								$(node).addClass('colspan2');	
+							} else if(val == '1') {
+								width = '100%';
+								$(node).addClass('colspan1');	
+							}
+							if (node.style.width != '33.3%' && node.style.width != ''){
+								width = node.style.width;
+							}
+							node.style.width = width;
+							(node.onclick = function() {
+								$('.checkedactive').removeClass('checkedactive');
+								$(node).addClass('checkedactive');
+								if(node.dataset.attribute === 'pfield') {
+									node.style.background = 'rgba(255,255,255,0.1)';
+									node.style.display = 'inline-block';
+								} else if(node.dataset.attribute === 'multiline' || node.dataset.attribute === 'imgfield' || node.dataset.attribute === 'filefield') {
+									node.style.display = 'inline-block';
+									node.style.width = '100%'
+									$(node).addClass('colspanall');
+								} else {
+									node.style.display = 'inline-block';
+								}
+								choose(node);						
+							})();
+						}
+					}
+				})
+			}
+		</script>
+	</head>
+
+	<body>
+		<div style="display: none;" id="tt">
+
+		</div>
+		<div class="wf-storyboard" style="display: none;" id="error">
+			<div class="wf-popup wf-message" style="width: 360px;">
+				<div class="wf-popup-content">
+					<i class="glyphicon glyphicon-info-sign" style="color: red;line-height: 40px;vertical-align: middle;"></i>
+					<span class="text" id="errormessage">ssssssssssssssssssssssss</span>
+				</div>
+			</div>
+		</div>
+		<div class="customForm row">
+			<div class="leftForm col-md-2 col-sm-2 col-xs-2">
+				<div>
+					<span style="color: #fff;font-size: 16px;">控件库</span>
+				</div>
+				<form id="dragArea">
+					<div class="conItem" data-attribute="textfield">
+						<label class="btn-field" title="适用于填写简短的文字内容，身份证号、银行卡号、工号等请使用此类型"><i class="iconfont">&#xe649;</i>单行文本</label>
+					</div>
+					<div class="conItem" data-attribute="multiline">
+						<label class="btn-field" title="适用于填写大段文本，如“备注”、“留言”"><i class="iconfont">&#xe7e1;</i>多行文本</label>
+					</div>
+					<div class="conItem" data-attribute="numberfield">
+						<label class="btn-field" title="适用于填写涉及到数学运算的数字，身份证号、银行卡号、工号等请使用单行文本"><i class="iconfont">&#xe660;</i>数字</label>
+					</div>
+					<div class="conItem" data-attribute="imgfield">
+						<label class="btn-field" title="适用于收集文件，如简历、照片"><i class="iconfont">&#xe791;</i>图片</label>
+					</div>
+					<div class="conItem" data-attribute="pfield">
+						<label class="btn-field" title="适用于填写说明文字"><i class="iconfont">&#xe648;</i>说明</label>
+					</div>
+					<div class="conItem" data-attribute="radiofield">
+						<label class="btn-field" title="适用于在少量选项里选一个，如“男/女”"><i class="iconfont">&#xe69c;</i>单选框</label>
+					</div>
+					<div class="conItem" data-attribute="checkfield">
+						<label class="btn-field" title="适用于在几个选项里选多个，如投票"><i class="iconfont">&#xe61c;</i>多选框</label>
+					</div>
+					<div class="conItem" data-attribute="datafield">
+						<label class="btn-field" title="适用于选择特定的日期"><i class="iconfont">&#xe64d;</i>日期</label>
+					</div>
+					<div class="conItem" data-attribute="moneyfield">
+						<label class="btn-field" title="适用于填写金额额度"><i class="iconfont">&#xe632;</i>金额</label>
+					</div>
+					<div class="conItem" data-attribute="stufield">
+						<label class="btn-field" title="适用于选择单个或者多个学生"><i class="iconfont">&#xe63e;</i>学生</label>
+					</div>
+					<div class="conItem" data-attribute="teafield">
+						<label class="btn-field" title="适用于选择单个或者多个教师"><i class="iconfont">&#xe69d;</i>教师</label>
+					</div>
+					<div class="conItem" data-attribute="selectfield">
+						<label class="btn-field" title="适用于在非常多的选项里选一个，如省份选择"><i class="iconfont">&#xe6de;</i>下拉框</label>
+					</div>
+					<div class="conItem" data-attribute="filefield">
+						<label class="btn-field" title="适用于在非常多的选项里选一个，如省份选择"><i class="iconfont">&#xe616;</i>文件上传</label>
+					</div>
+				</form>
+			</div>
+			<div class="centerForm col-md-7 col-sm-7 col-xs-7">
+				<div class="box clearfix">
+					<div>
+						<h3 id="formTitle">表单名称</h3>
+					</div>
+					<form class="blue" >
+						<div id="dropArea" style="padding: 0;margin: 0;height: 100%;">
+							
+						</div>
+					</form>
+				</div>
+				<div class="operate">
+					<div class="button lightblue">
+						<div class="center">
+							<button type="button" class="btn btn-prmary" onclick="showEx()">预览</button>
+							<button type="button" class="btn btn-success" onclick="getValue()">保存</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="rightForm  col-md-3 col-sm-3 col-xs-3">
+				<div class="tabbar" id="tabbar">
+					<a href="javascript:void(0)" class="tab-item" onclick="changeItem(0)">控件设置</a><a href="javascript:void(0)" class="tab-item active" onclick="changeItem(1)">表单设置</a>
+				</div>
+				<div id="rightForm">
+				</div>
+				<div id="formSet">
+					<div class="wf-field">
+						<div class="fieldname">
+							表单名称 <span class="fieldinfo ">最多10字</span>
+							<div class="fieldblock">
+								<input type="text" value="表单名称" id="formname" maxlength="10">
+							</div>
+						</div>
+					</div>
+					<div class="wf-field">
+						<div class="fieldname">
+							表单说明 <span class="fieldinfo ">最多100字</span>
+							<div class="fieldblock">
+								<textarea type="text" value="" id="formillustrate" maxlength="100"></textarea>
+							</div>
+						</div>
+					</div>
+					<div class="wf-field">
+						<div class="fieldname">
+							表单列数
+							<div class="fieldblock">
+								<select name="" class="option" id="formcols" onchange="getCols()">
+									<option value="1">单列</option>
+									<option value="2" selected>两列</option>
+									<option value="3">三列</option>
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="wf-field">
+						<div class="fieldname">
+							表单边框
+							<div class="fieldblock">
+								<div style="margin: 5px;">
+									<label for="borderwidth" style="margin-right: 10px;">边框宽度</label><input type="text" id="borderwidth" value="" style="width: 60px;"/>px
+								</div>
+								<div style="margin: 5px;">
+									<label for="bordercolor" style="margin-right: 10px;vertical-align: top;margin-bottom: 5px;">边框颜色</label><a href="javascript:void(0)" id="colorchoose"></a>
+								</div>								
+							</div>
+						</div>
+					</div>
+					<div class="wf-field">
+						<div class="fieldname">
+							<a href="javascript:void(0)" onclick="$('#addoption').toggle();">添加分组</a>
+							<div class="fieldblock" id="addoption" style="display: none;">
+								<input type="text" id="selectname" value="" />
+								<a href="javascript:void(0)" style="margin-left: 5px; font-size: 14px;color: #fff;" onclick="addOption()">确定</a>
+							</div>
+						</div>
+						<div class="fieldname">
+							选择分组 <br />
+							<select name="" class="option" id="select">
+								<option value="请选择">请选择</option>
+								<option value="分组1" selected>分组1</option>
+								<option value="分组2">分组2</option>
+								<option value="分组3">分组3</option>
+								<option value="分组4">分组4</option>
+								<option value="分组5">分组5</option>
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="ant-modal-content" style="display:none;" id="operate">
+			<div class="ant-modal-header">
+				<div class="ant-modal-title">批量编辑</div>
+			</div>
+			<div class="ant-modal-body">
+				<div>
+					<p class="wf-setting-title">每行对应一个选项</p>
+					<textarea class="wf-setting-textarea" rows="10" id="textoption"></textarea>
+				</div>
+			</div>
+			<div class="ant-modal-footer">
+				<button type="button" class="btn ant-btn-lg" onclick="$('#operate').hide()"><span>取 消</span></button>
+				<button type="button" class="btn btn-primary ant-btn-lg" onclick="getOption()"><span>确 定</span></button>
+			</div>
+		</div>
+	</body>
+
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>自定义表单</title>
+		<script src="js-customForm/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js-customForm/wordtopy.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js-customForm/draft.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js-customForm/form.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js-customForm/bind.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js-customForm/Serialization.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" href="css/bootstrap.min.css" />
+		<link rel="stylesheet" href="css/customForm_h5.css" />
+		<script>
+			window.onload = function() {
+				drag
+					({
+						dragArea: "dragArea",
+						dropArea: "dropArea",
+						onDropEnd: function(node){
+							if (node != undefined) {
+								if(node.dataset.attribute === 'pfield') {
+									node.style.background = 'rgba(255,255,255,0.1)';
+								}
+								(node.onclick = function() {
+									$('.checkedactive').removeClass('checkedactive');
+									$(node).addClass('checkedactive');
+									choose(node);
+								})();
+							}
+						}
+					})
+			}
+		</script>
+	</head>
+
+	<body>
+		<div class="wf-storyboard" style="display: none;" id="error">
+			<div class="wf-popup wf-message" style="width: 360px;">
+				<div class="wf-popup-content">
+					<i class="glyphicon glyphicon-info-sign" style="color: red;line-height: 40px;vertical-align: middle;"></i>
+					<span class="text" id="errormessage">ssssssssssssssssssssssss</span>
+				</div>
+			</div>
+		</div>
+		<div class="customForm">
+			<div class="leftForm">
+				<div>
+					<span style="color: #fff;font-size: 16px;">控件库</span>
+				</div>
+				<form id="dragArea">
+					<div class="form-group" data-attribute="textfield">
+						<div class="">
+							<span class="form-label">单行文本</span>
+						</div>
+						<div class="">
+							<span class="form-span">请输入</span>
+						</div>
+						<span style="display: none;">false</span>
+					</div>
+					<div class="form-group" data-attribute="multiline">
+						<div class="">
+							<span class="form-label" style="display:inline-block;height: 50px;">多行文本</label>
+					  	</div>
+					    <div class="">
+					    	<span class="form-span" style="display:inline-block;height: 50px;">请输入</span>
+						</div>
+						<span style="display: none;">false</span>
+					</div>
+					<div class="form-group" data-attribute="numberfield">
+						<div class="">
+							<span class="form-label" style="padding-right: 0px;">数字输入框 </span><span style="padding-right: 10px; float: right;"></span>
+						</div>
+						<div class="">
+							<span class="form-span">请输入</span>
+						</div>
+						<span style="display: none;">false</span>
+					</div>
+					<div class="form-group" data-attribute="imgfield">
+						<div>
+							<span class="form-label">图片</span>
+						</div>
+						<div>
+							<i class="glyphicon glyphicon-camera" style="font-size: 20px;position: absolute;right: 20px;top: 10px;color: #858e99;"></i>
+						</div>
+						<span style="display: none;">false</span>
+					</div>
+					<div class="form-group from-group-n" data-attribute="pfield">
+						<div>
+							<p class="form-p">请输入说明文字</p>
+						</div>
+						<span style="display: none;">false</span>
+					</div>
+					<div class="form-group" data-attribute="radiofield">
+						<div>
+							<span class="form-label">单选框</span>
+						</div>
+						<div>
+							<span class="form-radio">请选择</span><i class="glyphicon glyphicon-menu-right" style="font-size: 20px;position: absolute;right: 20px;top: 10px;color: #858e99;"></i>
+						</div>
+						<div style="display: none;">
+							<span data-attribute="option0">选项1</span>
+							<span data-attribute="option1">选项2</span>
+							<span data-attribute="option2">选项3</span>
+						</div>
+						<span style="display: none;">false</span>
+					</div>
+					<div class="form-group" data-attribute="checkfield">
+						<div>
+							<span class="form-label">多选框</span>
+						</div>
+						<div>
+							<span class="form-radio">请选择</span><i class="glyphicon glyphicon-menu-right" style="font-size: 20px;position: absolute;right: 20px;top: 10px;color: #858e99;"></i>
+						</div>
+						<div style="display: none;">
+							<span data-attribute="option0">选项1</span>
+							<span data-attribute="option1">选项2</span>
+							<span data-attribute="option2">选项3</span>
+						</div>
+						<span style="display: none;">false</span>
+					</div>
+					<div class="form-group" data-attribute="datafield">
+						<div>
+							<span class="form-label">日期</span>
+						</div>
+						<div>
+							<span class="form-radio">请选择</span><i class="glyphicon glyphicon-menu-right" style="font-size: 20px;position: absolute;right: 20px;top: 10px;color: #858e99;"></i>
+							<span style="display: none;">年-月-日  时:分</span>
+						</div>
+						<span style="display: none;">false</span>
+					</div>
+					<div class="form-group" data-attribute="moneyfield">
+						<div>
+							<span class="form-label" style="padding-right: 0px;">金额</span>（元）
+						</div>
+						<div>
+							<span class="form-span">请输入</span>
+						</div>
+						<span style="display: none;">false</span>
+					</div>
+					<div class="form-group" data-attribute="stufield">
+						<div>
+							<span class="form-label">学生</span>
+						</div>
+						<div>
+							<span class="form-radio">请选择</span><i class="glyphicon glyphicon-menu-right" style="font-size: 20px;position: absolute;right: 20px;top: 10px;color: #858e99;"></i>
+							<span style="display: none;">单选</span>
+						</div>
+						<span style="display: none;">false</span>
+					</div>
+					<div class="form-group" data-attribute="teafield">
+						<div>
+							<span class="form-label">教师</span>
+						</div>
+						<div>
+							<span class="form-radio">请选择</span><i class="glyphicon glyphicon-menu-right" style="font-size: 20px;position: absolute;right: 20px;top: 10px;color: #858e99;"></i>
+							<span style="display: none;">单选</span>
+						</div>
+						<span style="display: none;">false</span>
+					</div>
+				</form>
+			</div>
+			<div class="centerForm">
+				<div class="box clearfix">
+					<form class="blue" id="dropArea">
+						
+					</form>
+				</div>
+				<div class="operate">
+					<div class="button lightblue">
+						<div class="center">
+							<button type="button" class="btn btn-success" onclick="getValue()">保存</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="rightForm">
+				<div class="tabbar" id="tabbar">
+					<a href="javascript:void(0)" class="tab-item" onclick="changeItem(0)">控件设置</a><a href="javascript:void(0)" class="tab-item active" onclick="changeItem(1)">表单设置</a>
+				</div>
+				<div id="rightForm">
+
+				</div>
+				<div id="formSet">
+					<div class="wf-field">
+						<div class="fieldname">
+							表单名称 <span class="fieldinfo ">最多10字</span>
+							<div class="fieldblock">
+								<input type="text" value="" id="formname" maxlength="10">
+							</div>
+						</div>
+					</div>
+					<div class="wf-field">
+						<div class="fieldname">
+							表单说明 <span class="fieldinfo ">最多100字</span>
+							<div class="fieldblock">
+								<textarea type="text" value="" id="formillustrate" maxlength="100"></textarea>
+							</div>
+						</div>
+					</div>
+					<div class="wf-field">
+						<div class="fieldname">
+							<a href="javascript:void(0)" onclick="$('#addoption').toggle();">添加分组</a>
+							<div class="fieldblock" id="addoption" style="display: none;">
+								<input type="text" id="selectname" value="" />
+								<a href="javascript:void(0)" style="margin-left: 5px; font-size: 14px;color: #fff;" onclick="addOption()">确定</a>
+							</div>
+						</div>
+						<div class="fieldname">
+							选择分组 <br />
+							<select name="" class="option" id="select">
+								<option value="请选择" selected>请选择</option>
+								<option value="分组1">分组1</option>
+								<option value="分组2">分组2</option>
+								<option value="分组3">分组3</option>
+								<option value="分组4">分组4</option>
+								<option value="分组5">分组5</option>
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="ant-modal-content" style="display:none;" id="operate">
+			<div class="ant-modal-header">
+				<div class="ant-modal-title">批量编辑</div>
+			</div>
+			<div class="ant-modal-body">
+				<div>
+					<p class="wf-setting-title">每行对应一个选项</p>
+					<textarea class="wf-setting-textarea" rows="10" id="textoption"></textarea>
+				</div>
+			</div>
+			<div class="ant-modal-footer">
+				<button type="button" class="btn ant-btn-lg" onclick="$('#operate').hide()"><span>取 消</span></button>
+				<button type="button" class="btn btn-primary ant-btn-lg" onclick="getOption()"><span>确 定</span></button>
+			</div>
+		</div>
+	</body>
+
+</html>

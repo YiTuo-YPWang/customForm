@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>预览</title>
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+		<link rel="stylesheet" type="text/css" href="css/bootstrap-datetimepicker.min.css"/>
+		<link rel="stylesheet" type="text/css" href="css/form.css"/>
+		<script src="js-form/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js-form/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js-form/bootstrap-datetimepicker.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js-form/bootstrap-datetimepicker.zh-CN.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var k;
+			var form = {
+				formName: "表单名称",
+				formIllustrate: "表单说明",
+				formCols: '3',
+				formGroup: "分组2",
+				formBorderWidth: "1px",
+				formBorderColor: "#002B56",
+				option: [
+					{type: "text", label: "单行", hint: "请输入", Isrequired: "true", labelpy: "SX", width: "1"},
+					{type: "number", label: "数字", hint: "请输入", unit: "单位", Isrequired: "false", labelpy: "SZ", width: "1"},					
+					{type: "radio", label: "单选框", Isrequired: "false", labelpy: "SXK", options: ["选项1", "选项2", "选项3"], width: "1"},
+					{type: "checkbox", label: "多选框", Isrequired: "false", labelpy: "DXK", options: ["选项1", "选项2", "选项3"], width: "1"},
+					{type: "select", label: "下拉框", Isrequired: "false", labelpy: "XLK", options: ["选项1", "选项2", "选项3"], width: "2"},
+					{type: "data", label: "日期", datatype: "yyyy-mm-dd hh:ii", Isrequired: "false", labelpy: "RQ", width: "1"},					
+					{type: "money", label: "金额", hint: "请输入", Isrequired: "false", labelpy: "JE", width: "2"},
+					{type: "label", label: "说明", content: "请输入说明文字", Isrequired: "true", labelpy: "YM", width: "3"},	
+					{type: "stu", label: "学生", datatype: "单选", Isrequired: "false", labelpy: "XS", width: "1"},
+					{type: "tea", label: "教师", datatype: "单选", Isrequired: "false", labelpy: "JS", width: "2"},	
+					{type: "label", label: "说明", content: "请输入说明文字", Isrequired: "true", labelpy: "YM", width: "2"},	
+					{type: "stu", label: "学生", datatype: "单选", Isrequired: "false", labelpy: "XS", width: "1"},
+					{type: "img", label: "图片", Isrequired: "false", labelpy: "TP"},					
+					{type: "multiline", label: "多行", hint: "请输入", Isrequired: "true", labelpy: "DX"},
+					{type: "file", label: "文件上传", Isrequired: "false", labelpy: "WJSZ"}			
+				]
+			}
+			$(function(){
+				var labelpy = [];				
+				if (localStorage.getItem('form') != null) {
+					form = JSON.parse(localStorage.getItem('form'));
+				}
+				$('#formdiv').css('border-color', form.formBorderColor);
+				$('#formdiv').css('border-width', form.formBorderWidth);
+				$('#formTitle').html(form.formName);
+				getHtml(form.option);
+				for(var i = 0; i < form.option.length; i++){
+					var item = form.option[i];
+					if (item.type == 'data') {
+						labelpy.push(item.labelpy);
+					}
+				}
+				for(var j = 0; j < labelpy.length; j++) {
+					$('#'+ labelpy[j]).datetimepicker({
+						language: 'zh-CN',
+						minView: 2
+					});
+				}
+				$('td').css('border-style', 'solid')
+				$('td').css('border-color', form.formBorderColor);
+				$('td').css('border-width', form.formBorderWidth);
+			});
+			function upload(id){
+				$('#'+ id +'k').click();
+			}
+			function previewImage(file, id){
+				var img =  file.files[0];
+				if (!/image\/\w+/.test(img.type)) {
+			        alert("只能选择图片");
+			        return false;
+			  }
+				var reader = new FileReader();
+				reader.onload = function(e){
+	                var srcImg = this.result;
+	                $('#'+ id).attr('src', srcImg);
+	            }
+            	reader.readAsDataURL(img);
+			}
+			function previewFile(file, id){
+				var files = file.files;
+				for (var i = 0; i < files.length; i++){
+					var item = files[i];
+					var name = item.name;
+					var li = '<li>'+ name +'<a href="javascript:void(0)" onclick="delFile(this)">×</a></li>';
+					$('#'+id).append(li);
+					console.log(item);
+				}
+			}
+			function delFile(self){
+				$(self).parent().remove();
+			}
+			function Isempty(self){
+				var val = $(self).val();
+				if (val == '') {
+					console.log(self);
+					$(self).addClass('error');
+				} else {
+					$(self).removeClass('error');
+				}
+			}
+			function getHtml(arr){
+				var k = 0;
+				var html = '<tr>';
+				var tw;
+				for (var i = 0; i < arr.length; i++) {					
+					var item = arr[i];		
+					if (arr[i] != undefined) {
+						tw = arr[i].width;
+					}
+					if (item.type != 'img' && item.type != 'multiline' && item.type != 'file'){		
+						if (k >= parseInt(form.formCols) || tw == parseInt(form.formCols)) {
+							k = 0;
+							html += '</tr><tr>';
+							k += parseInt(item.width);	
+						} else {
+							if (i!= 0 && arr[i-1].width === '2' && (arr[i].width === '2' || arr[i].width === '3')){
+								html += '</tr><tr>';
+							} else if ( k == 2 && tw == '2'){
+								html += '</tr><tr>';
+							} else {
+								k += parseInt(item.width);	
+							}
+											
+						}
+					}					
+					if (item.type === 'text') {
+						if (item.Isrequired == 'true') {
+							html += '<td class="form-it" colspan="'+ item.width +'"><div class="form-mg"><label>'+ item.label +'</label><span style="color: red;">*</span></div><div class="form-ip "><input type="text" value="" placeholder="'+ item.hint +'" oninput="Isempty(this)" required/></div></td>';
+						} else {
+							html += '<td class="form-it" colspan="'+ item.width +'"><div class="form-mg"><label>'+ item.label +'</label></div><div class="form-ip "><input type="text" value="" placeholder="'+ item.hint +'"/></div></td>';
+						}
+					} else if (item.type === 'number') {
+						if (item.Isrequired == 'true') {
+							if (item.unit == ''){
+								html += '<td class="form-it" colspan="'+ item.width +'"><div class="form-mg"><label>'+ item.label +'</label><span style="color: red;">*</span></div><div class="form-ip "><input type="number" value="" placeholder="'+ item.hint +'" oninput="Isempty(this)" required/></div></td>';
+							} else {
+								html += '<td class="form-it" colspan="'+ item.width +'"><div class="form-mg"><label>'+ item.label +'('+ item.unit +')</label><span style="color: red;">*</span></div><div class="form-ip "><input type="number" value="" placeholder="'+ item.hint +'" oninput="Isempty(this)" required/></div></td>';
+							}
+						} else {
+							if (item.unit == ''){
+								html += '<td class="form-it" colspan="'+ item.width +'"><div class="form-mg"><label>'+ item.label +'</label></div><div class="form-ip "><input type="number" value="" placeholder="'+ item.hint +'"/></div></td>';
+							} else {
+								html += '<td class="form-it" colspan="'+ item.width +'"><div class="form-mg"><label>'+ item.label +'('+ item.unit +')</label></div><div class="form-ip "><input type="number" value="" placeholder="'+ item.hint +'"/></div></td>';
+							}
+						}
+					} else if (item.type === 'money') {
+						if (item.Isrequired == 'true') {
+							html += '<td class="form-it" colspan="'+ item.width +'"><div class="form-mg"><label>'+ item.label +'</label><span style="color: red;">*</span> </div><div class="form-ip"><input type="number" value="" placeholder="'+ item.hint +'" oninput="Isempty(this)" required/></div></td>';
+						} else {
+							html += '<td class="form-it" colspan="'+ item.width +'"><div class="form-mg"><label>'+ item.label +'</label></div><div class="form-ip "><input type="number" value="" placeholder="'+ item.hint +'"/></div></td>';
+						}					
+					} else if (item.type === 'multiline') {
+						if (item.Isrequired == 'true') {
+							html += '<tr><td class="form-it" colspan="'+ form.formCols +'"><div class="form-mg" style="width: 165px;"><label>'+ item.label +'</label><span style="color: red;">*</span> </div><div class="form-ip " style="height: auto;"><textarea rows="4" style="width:100%;" oninput="Isempty(this)">'+ item.hint +'</textarea></div></td></tr>';
+						} else {
+							html += '<tr><td class="form-it" colspan="'+ form.formCols +'"><div class="form-mg" style="width: 165px;"><label>'+ item.label +'</label></div><div class="form-ip " style="height: auto;"><textarea rows="4" style="width:100%">'+ item.hint +'</textarea></div></td></tr>';
+						}					
+					} else if (item.type === 'radio' || item.type === 'checkbox' || item.type === 'select') {
+						if (item.Isrequired == 'true') {
+							html += '<td class="form-it" colspan="'+ item.width +'"><div class="form-mg"><label>'+ item.label +'</label><span style="color: red;">*</span> </div><div class="form-ip ">';	
+						} else {
+							html += '<td class="form-it" colspan="'+ item.width +'"><div class="form-mg"><label>'+ item.label +'</label></div><div class="form-ip ">';	
+						}							
+						var options = item.options;
+						if (item.type === 'select'){
+							html += '<select name="'+ item.labelpy +'">';
+						}
+						for (var j = 0; j < options.length; j++){
+							if (item.type === 'radio') {
+								html += '<span class="radio-inline"><input type="radio" name="'+ item.labelpy +'" id="'+ item.labelpy +''+ j +'" value=""/><label for="'+ item.labelpy +''+ j +'">' + options[j] + '</label></span>';
+							} else if (item.type === 'checkbox') {
+								html += '<span class="checkbox-inline "><input type="checkbox" name="'+ item.labelpy +'" id="'+ item.labelpy +''+ j +'" value=""/><label for="'+ item.labelpy +''+ j +'">' + options[j] + '</label></span>';
+							} else if (item.type === 'select') {
+								html += '<option value="'+ options[j] +'">'+ options[j] +'</option>';
+							}
+						}
+						if (item.type === 'select'){
+							html += '</select>';
+						}
+						html += '</div></td>';
+					} else if (item.type === 'data') {
+						if (item.Isrequired == 'true') {
+							html += '<td class="form-it" colspan="'+ item.width +'"><div class="form-mg"><label>'+ item.label +'</label><span style="color: red;">*</span></div><div class="form-ip "><input type="text" value="" id="'+ item.labelpy +'" data-date-format="'+ item.datatype +'" oninput="Isempty(this)" required/></div></td>';
+						} else {
+							html += '<td class="form-it" colspan="'+ item.width +'"><div class="form-mg"><label>'+ item.label +'</label></div><div class="form-ip "><input type="text" style="vertical-align: top;" id="'+ item.labelpy +'" data-date-format="'+ item.datatype +'"><label class="input-group-addon" for="'+ item.labelpy +'"><i class="icon-date">&#xe64d;</i></label></div></td>';
+						}						
+					} else if (item.type === 'stu' || item.type === 'tea') {
+						if (item.Isrequired == 'true') {
+							html += '<td class="form-it" colspan="'+ item.width +'"><div class="form-mg"><label>'+ item.label +'</label><span style="color: red;">*</span></div><div class="form-ip "><input type="text" value="" disabled oninput="Isempty(this)" required/><span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span></div></td>';
+						} else {
+							html += '<td class="form-it" colspan="'+ item.width +'"><div class="form-mg"><label>'+ item.label +'</label></div><div class="form-ip "><input type="text" value="" disabled/><span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span></div></td>';
+						}					
+					} else if (item.type === 'label') {
+						if (item.Isrequired === 'false') {
+							html += '';
+						} else {
+							html += '<td class="form-it" colspan="'+ item.width +'"><div class="form-mg"><label>'+ item.label +'</label></div><div class="form-ip "><p>'+ item.content +'</p></div></td>';					
+						}					
+					} else if (item.type === 'img') {
+						if (item.Isrequired == 'true') {
+							html += '<tr><td class="form-it" colspan="'+ form.formCols +'"><div class="form-mg" style="width: 165px;"><label>'+ item.label +'</label><span style="color: red;">*</span></div><div class="form-ip "><img class="cp_img_jia" src="img/cp_img_tj.png" onclick="upload(\''+ item.labelpy +'\')" id="'+ item.labelpy +'"/><input type="file" accept="image/*" onchange="previewImage(this, \''+ item.labelpy +'\')" style="display: none;" id="'+ item.labelpy +'k"/></div></td></tr>';
+						} else {
+							html += '<tr><td class="form-it" colspan="'+ form.formCols +'"><div class="form-mg" style="width: 165px;"><label>'+ item.label +'</label></div><div class="form-ip "><img class="cp_img_jia" src="img/cp_img_tj.png" onclick="upload(\''+ item.labelpy +'\')" id="'+ item.labelpy +'"/><input type="file" accept="image/*" onchange="previewImage(this, \''+ item.labelpy +'\')" style="display: none;" id="'+ item.labelpy +'k"/></div></td></tr>';
+						}										
+					} else if (item.type === 'file') {
+						if (item.Isrequired == 'true') {
+							html += '<tr><td class="form-it" colspan="'+ form.formCols +'"><div class="form-mg" style="width: 165px;"><label>'+ item.label +'</label><span style="color: red;">*</span></div><div class="form-ip " style="height: auto;"><a href="javascript:void(0)" onclick="upload(\''+ item.labelpy +'\')">上传附件</a><ul id="'+ item.labelpy +'"></ul></div><input type="file" onchange="previewFile(this, \''+ item.labelpy +'\')" style="display: none;" id="'+ item.labelpy +'k" multiple/></td></tr>';
+						} else {
+							html += '<tr><td class="form-it" colspan="'+ form.formCols +'"><div class="form-mg" style="width: 165px;"><label>'+ item.label +'</label></div><div class="form-ip " style="height: auto;"><a href="javascript:void(0)" onclick="upload(\''+ item.labelpy +'\')">上传附件</a><ul id="'+ item.labelpy +'"></ul></div><input type="file" onchange="previewFile(this, \''+ item.labelpy +'\')" style="display: none;" id="'+ item.labelpy +'k" multiple/></td></tr>';
+						}
+					}
+				}
+				$('#form').append(html);
+			}
+		</script>
+	</head>
+
+	<body>
+		<form action="" name="" style="position: relative;">
+			<div>
+				<h3 id="formTitle"></h3>
+			</div>
+			<div style="padding: 0; border: 1px solid;width: 100%;margin: 0 auto;" id="formdiv">
+				<table class="form-item" id="form">
+				 
+				</table>
+			</div>								
+		</form>
+	</body>
+</html>
